@@ -22,15 +22,23 @@
             Name = name;
         }
 
-        public Unit (float armor, float health)
+        public Unit(string name, float health) : this(name: "Unknown Unit")
         {
-            Armor = armor;
+            Name = name;
             _health = health;
+            Armor = 0.6f;
         }
 
-        public Unit (int damage)
+        public Unit (int maxDamage)
         {
-            Damage = damage;
+            if (maxDamage <= 0)
+            {
+                maxDamage = 10;
+                Console.WriteLine("Недопустимый максимальный дамаг");
+            }
+
+                var damage = new Interval(0, maxDamage);
+            Damage = damage.Get;
         }
 
         public float GetRealHealth ()
