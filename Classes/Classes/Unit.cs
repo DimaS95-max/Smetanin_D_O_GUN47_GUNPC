@@ -8,7 +8,7 @@
         
         public float Health => _health;
 
-        public int Damage { get; }
+        public Interval Damage { get; }
 
         public float Armor { get; }
 
@@ -29,16 +29,9 @@
             Armor = 0.6f;
         }
 
-        public Unit (int maxDamage)
+        public Unit (int minDamage, int maxDamage)
         {
-            if (maxDamage <= 0)
-            {
-                maxDamage = 10;
-                Console.WriteLine("Недопустимый максимальный дамаг");
-            }
-
-                var damage = new Interval(0, maxDamage);
-            Damage = damage.Get;
+            Damage = new Interval(minDamage, maxDamage);
         }
 
         public float GetRealHealth ()

@@ -22,8 +22,8 @@ namespace Classes
             for (int i = 0; i < Room.Length; i++)
             {
                 var rooms = Room[i];
-                Console.WriteLine("Unit of room "+ rooms.Unit);
-                Console.WriteLine("Weapon of room "+ rooms.Weapon);
+                Console.WriteLine("Unit of room {0}, {1} ",rooms.Unit.Name, rooms.Unit.Damage);
+                Console.WriteLine("Weapon of room {0}, {1}, {2}", rooms.Weapon.Name, rooms.Weapon.Damage, rooms.Weapon.Durability);
                 Console.WriteLine("—");
             }
         }

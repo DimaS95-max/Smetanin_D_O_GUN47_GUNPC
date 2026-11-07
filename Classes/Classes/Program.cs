@@ -10,12 +10,12 @@ namespace Classes
     {
         public int Min { get; }
         public int Max { get; }
-        public int Get { get; }
+        public int Get { get { return GetRandom(Min, Max); } }
 
         private static readonly Random rand = new Random();
 
         public int GetRandom(int min, int max)
-        {return rand.Next(min, max);}
+        {return rand.Next(min, max+1);}
 
         public Interval (int minValue, int maxValue)
         {
@@ -43,7 +43,6 @@ namespace Classes
             }
             Min=minValue; 
             Max=maxValue;
-            Get = GetRandom(minValue, maxValue);
 
         }
     }
@@ -54,8 +53,8 @@ namespace Classes
 
     public struct Room
     {
-        public Unit Unit;
-        public Weapon Weapon;
+        public Unit Unit { get; }
+        public Weapon Weapon { get; }
 
         public Room(Unit unit, Weapon weapon)
         {
@@ -101,11 +100,11 @@ namespace Classes
             var object1 = new Weapon(Name, 4, 10, 20f);
             var GetDamage = object1.GetDamage();
 
-            var object2 = new Interval(object1.MinDamage, object1.MaxDamage);
+            var object2 = new Interval(object1.Damage.Min, object1.Damage.Max);
 
             var object3 = new Unit(name, health);
 
-            var object4 = new Unit(10);
+            var object4 = new Unit(0,10);
 
             Console.WriteLine("Введите полученный дамаг:");
             if (!int.TryParse(s: Console.ReadLine(), out int value))
@@ -116,7 +115,7 @@ namespace Classes
             var RealHealth = object3.GetRealHealth();
             var returnHealth = object3.SetDamage(value);
             Console.WriteLine("Реальное здоровье бойца до атаки= {0}, после атаки боец мертв= {1}, Наносимый урон= {2}", RealHealth, returnHealth, object2.Get);
-            Console.WriteLine("Мин. урон оружия= {0}, Макс. урон оружия= {1}, Средний урон= {2}", object1.MinDamage, object1.MaxDamage, GetDamage);
+            Console.WriteLine("Мин. урон оружия= {0}, Макс. урон оружия= {1}, Средний урон= {2}", object1.Damage.Min, object1.Damage.Max, GetDamage);
 
             var object5 = new Dungeon();
             Console.WriteLine("Массив- {0}, {1}, {2}", object5.Room[0], object5.Room[1], object5.Room[2]);
