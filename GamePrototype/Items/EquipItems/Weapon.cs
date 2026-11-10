@@ -2,7 +2,7 @@
 
 namespace GamePrototype.Items.EquipItems
 {
-    public sealed class Weapon : EquipItem
+    public abstract class Weapon : EquipItem
     {
         public Weapon(uint damage, uint durability, string name) : base(durability, name) => Damage = damage;
 

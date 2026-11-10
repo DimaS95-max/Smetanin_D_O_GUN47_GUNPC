@@ -428,3 +428,5 @@ FodyWeavers.xsd
 #*.lscache
 GamePrototype/bin/ 
 GamePrototype/obj/
+Calculator/
+Massiv/

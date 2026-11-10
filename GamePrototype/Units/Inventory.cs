@@ -1,4 +1,6 @@
 ﻿using GamePrototype.Items.EconomicItems;
+using GamePrototype.Items.EquipItems;
+using GamePrototype.Utils;
 
 namespace GamePrototype.Units
 {
@@ -23,7 +25,7 @@ namespace GamePrototype.Units
 
         public bool TryRemove(Item item) 
         {
-            if ( _items.Count == 0 || !_items.Contains(item)) 
+            if ( _items.Count == 0 || !_items.Contains(item))
             {
                 return false;
             }

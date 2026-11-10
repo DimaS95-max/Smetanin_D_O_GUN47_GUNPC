@@ -2,6 +2,7 @@
 using GamePrototype.Dungeon;
 using GamePrototype.Units;
 using GamePrototype.Utils;
+using System.Xml.Linq;
 
 namespace GamePrototype.Game
 {
@@ -23,10 +24,37 @@ namespace GamePrototype.Game
         private void Initialize()
         {
             Console.WriteLine("Welcome, player!");
-            _dungeon = DungeonBuilder.BuildDungeon();
             Console.WriteLine("Enter your name");
-            _player = UnitFactoryDemo.CreatePlayer(Console.ReadLine());
-            Console.WriteLine($"Hello {_player.Name}");
+            string? name = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(name))
+            {
+
+                Console.WriteLine("Некорректное имя. Попробуйте ещё раз.");
+                name = Console.ReadLine();
+            }
+
+            Console.WriteLine($"Hello {name}");
+            Console.WriteLine("Введите сложность (Easy/Hard)");
+            if (Enum.TryParse<Сomplexity>(Console.ReadLine(), out var complexity))
+            {
+                switch (complexity)
+                {
+                    case Сomplexity.Easy:
+                        _dungeon = new DungeonBuilder().BuildDungeon();
+                        _player = new UnitFactoryDemo().CreatePlayer(name);
+                        break;
+                    case Сomplexity.Hard:
+                        _dungeon = new DungeonBuilder2().BuildDungeon();
+                        _player = new UnitFactoryDemo2().CreatePlayer(name);
+                        break;
+                    
+                    default:
+                        Console.WriteLine("Unknown complexity level.");
+                        break;
+
+                }
+            }
+
         }
 
         private void StartGameLoop()

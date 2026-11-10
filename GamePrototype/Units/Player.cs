@@ -27,11 +27,27 @@ namespace GamePrototype.Units
             var items = Inventory.Items;
             for (int i = 0; i < items.Count; i++) 
             {
-                if (items[i] is EconomicItem economicItem) 
+                if (items[i] is HealthPotion economicItem) 
                 {
                     UseEconomicItem(economicItem);
                     Inventory.TryRemove(items[i]);
                 }
+                if (items[i] is Grindstone grindstone && (_equipment.TryGetValue(EquipSlot.Weapon, out var item) && item is RangeWeapon weapon))
+                {
+                    weapon.Repair(grindstone.GrindstoneRestore);
+                    Inventory.TryRemove(items[i]);
+                }
+                if (items[i] is RangeWeapon rangeWeapon)
+                {
+                    AddWeapon(EquipSlot.Weapon, rangeWeapon);
+                    Inventory.TryRemove(items[i]);
+                }
+                if (items[i] is Helmet helmet)
+                {
+                    AddWeapon(EquipSlot.Armour, helmet);
+                    Inventory.TryRemove(items[i]);
+                }
+
             }
         }
 
@@ -43,6 +59,36 @@ namespace GamePrototype.Units
                 return;
             }
             base.AddItemToInventory(item);
+        }
+
+        // Метод для добавления/замены оружия в слот
+        public void AddWeapon(EquipSlot slot, EquipItem item)
+        {
+            if (!_equipment.ContainsKey(slot))
+            {
+                _equipment.Add(slot, item);
+                Console.WriteLine("Оружие добавлено в слот");
+            }
+            else
+            {
+                _equipment[slot] = item;
+                Console.WriteLine("Оружие успешно заменено");
+            }
+        }
+
+        // Метод для добавления/замены брони в слот
+        public void AddArmour(EquipSlot slot, EquipItem item)
+        {
+            if (!_equipment.ContainsKey(slot))
+            {
+                _equipment.Add(slot, item);
+                Console.WriteLine("Броня добавлена в слот");
+            }
+            else
+            {
+                _equipment[slot] = item;
+                Console.WriteLine("Броня успешно заменена");
+            }
         }
 
         private void UseEconomicItem(EconomicItem economicItem)
@@ -60,6 +106,13 @@ namespace GamePrototype.Units
                 damage -= (uint)(damage * (armour.Defence / 100f));
             }
             return damage;
+        }
+        protected override void ReductionInStrength()
+        {
+            if (_equipment.TryGetValue(EquipSlot.Armour, out var item) && item is Armour armour)
+            {
+                armour.ReduceDurability(1);
+            }
         }
 
         public override string ToString()
