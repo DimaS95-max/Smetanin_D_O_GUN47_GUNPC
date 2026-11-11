@@ -2,7 +2,6 @@
 using GamePrototype.Dungeon;
 using GamePrototype.Units;
 using GamePrototype.Utils;
-using System.Xml.Linq;
 
 namespace GamePrototype.Game
 {
@@ -10,6 +9,7 @@ namespace GamePrototype.Game
     {
         private Unit _player;
         private DungeonRoom _dungeon;
+        private Complexity _complexity;
         private readonly CombatManager _combatManager = new CombatManager();
         
         public void StartGame() 
@@ -35,26 +35,40 @@ namespace GamePrototype.Game
 
             Console.WriteLine($"Hello {name}");
             Console.WriteLine("Введите сложность (Easy/Hard)");
-            if (Enum.TryParse<Сomplexity>(Console.ReadLine(), out var complexity))
-            {
-                switch (complexity)
-                {
-                    case Сomplexity.Easy:
-                        _dungeon = new DungeonBuilder().BuildDungeon();
-                        _player = new UnitFactoryDemo().CreatePlayer(name);
-                        break;
-                    case Сomplexity.Hard:
-                        _dungeon = new DungeonBuilder2().BuildDungeon();
-                        _player = new UnitFactoryDemo2().CreatePlayer(name);
-                        break;
-                    
-                    default:
-                        Console.WriteLine("Unknown complexity level.");
-                        break;
 
+            while (true)
+            {
+                // Проверяем ввод с помощью TryParse и IsDefined
+                if (Enum.TryParse<Complexity>(Console.ReadLine(), true, out var complexity) && Enum.IsDefined(typeof(Complexity), complexity))
+                {
+                    // Ввод корректен — можно использовать значение _complexity
+                    _complexity=complexity;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Неверный ввод. Пожалуйста, введите снова.");
                 }
             }
 
+            switch (_complexity)
+                    {
+                        case Complexity.Easy:
+                            _dungeon = new DungeonBuilder().BuildDungeon();
+                            _player = new UnitFactoryDemo().CreatePlayer(name);
+                            break;
+                        case Complexity.Hard:
+                            _dungeon = new DungeonBuilder2().BuildDungeon();
+                            _player = new UnitFactoryDemo2().CreatePlayer(name);
+                            break;
+
+                        default:
+                            Console.WriteLine("Unknown complexity level.");
+                            break;
+
+                    }
+
+            
         }
 
         private void StartGameLoop()

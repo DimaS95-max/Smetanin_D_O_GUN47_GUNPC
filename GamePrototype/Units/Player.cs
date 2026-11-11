@@ -27,35 +27,73 @@ namespace GamePrototype.Units
             var items = Inventory.Items;
             for (int i = 0; i < items.Count; i++) 
             {
-                if (items[i] is HealthPotion economicItem) 
+                if (items[i] is HealthPotion economicItem)
                 {
                     UseEconomicItem(economicItem);
                     Inventory.TryRemove(items[i]);
                 }
-                if (items[i] is Grindstone grindstone && (_equipment.TryGetValue(EquipSlot.Weapon, out var item) && item is RangeWeapon weapon))
+                else
                 {
-                    weapon.Repair(grindstone.GrindstoneRestore);
-                    Inventory.TryRemove(items[i]);
+                    if (items[i] is Grindstone grindstone && (_equipment.TryGetValue(EquipSlot.Weapon, out var item) && item is RangeWeapon weapon))
+                    {
+                        weapon.Repair(grindstone.GrindstoneRestore);
+                        Inventory.TryRemove(items[i]);
+                    }
+                    else
+                    {
+                        if (items[i] is RangeWeapon rangeWeapon)
+                        {
+                            AddWeapon(EquipSlot.Weapon, rangeWeapon);
+                            Inventory.TryRemove(items[i]);
+                        }
+                        else
+                        {
+                            if (items[i] is Helmet helmet)
+                            {
+                                AddWeapon(EquipSlot.Armour, helmet);
+                                Inventory.TryRemove(items[i]);
+                            }
+                            else 
+                            { 
+                            }
+                        }
+                    }
                 }
-                if (items[i] is RangeWeapon rangeWeapon)
-                {
-                    AddWeapon(EquipSlot.Weapon, rangeWeapon);
-                    Inventory.TryRemove(items[i]);
-                }
-                if (items[i] is Helmet helmet)
-                {
-                    AddWeapon(EquipSlot.Armour, helmet);
-                    Inventory.TryRemove(items[i]);
-                }
-
             }
         }
 
         public override void AddItemToInventory(Item item)
         {
-            if (item is EquipItem equipItem && _equipment.TryAdd(equipItem.Slot, equipItem)) 
+            if (item is EquipItem equipItem) 
             {
                 // Item was equipped
+                if (equipItem is Helmet helmet)
+                {
+                    if (_equipment.TryGetValue(EquipSlot.Armour, out var items))
+                    {
+                        if (!Inventory.TryAdd(items))
+                        {
+                            Console.WriteLine($"Inventory of {Name} is full");
+                        }
+                    }
+                    AddArmour(EquipSlot.Armour, helmet);
+                    Inventory.TryRemove(equipItem);
+                }
+                else
+                {
+                    if (equipItem is RangeWeapon rangeWeapon)
+                    {
+                        if (_equipment.TryGetValue(EquipSlot.Weapon, out var items))
+                        {
+                            if (!Inventory.TryAdd(items))
+                            {
+                                Console.WriteLine($"Inventory of {Name} is full");
+                            }
+                        }
+                        AddWeapon (EquipSlot.Weapon, rangeWeapon);
+                        Inventory.TryRemove(equipItem);
+                    }
+                }
                 return;
             }
             base.AddItemToInventory(item);
@@ -107,7 +145,7 @@ namespace GamePrototype.Units
             }
             return damage;
         }
-        protected override void ReductionInStrength()
+        protected override void DamageReceiveHandler()
         {
             if (_equipment.TryGetValue(EquipSlot.Armour, out var item) && item is Armour armour)
             {

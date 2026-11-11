@@ -14,8 +14,19 @@ namespace GamePrototype.Items.EquipItems
 
         protected EquipItem(uint maxDurability, string name) : base(name) => _maxDurability = maxDurability;
 
-        public void ReduceDurability(uint delta) => _durability -= delta;
-        
+        public void ReduceDurability(uint delta)
+        {
+            if (_maxDurability >= delta )
+            {
+                _maxDurability -= delta;
+                Console.WriteLine($"Остаток брони {_maxDurability}");
+            }
+            else
+            {
+                _maxDurability = 0;
+
+            }
+        }
 
         public void Repair(uint delta) => 
             _durability += _durability + delta > _maxDurability 

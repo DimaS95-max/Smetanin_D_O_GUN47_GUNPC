@@ -1,11 +1,6 @@
 ﻿using GamePrototype.Items.EconomicItems;
 using GamePrototype.Items.EquipItems;
 using GamePrototype.Units;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamePrototype.Utils
 {
@@ -15,7 +10,7 @@ namespace GamePrototype.Utils
         {
             var player = new Player(name, 25, 25, 4);
             player.AddItemToInventory(new RangeWeapon (5, 15, "RangeWeapon"));
-            player.AddItemToInventory(new Helmet (5, 15, "WithoutArmor"));
+            player.AddItemToInventory(new Helmet (5, 15, "Helmet"));
             player.AddItemToInventory(new HealthPotion("Potion"));
             return player;
         }
